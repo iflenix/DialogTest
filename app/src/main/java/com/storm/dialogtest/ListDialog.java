@@ -57,7 +57,6 @@ public class ListDialog extends DialogFragment implements DialogInterface.OnClic
             String checkedStr = "Checked: ";
             for (int i = 0; i < checkedArray.size();i++) {
                 checkedStr+= i+ ", ";
-
             }
             Toast toast = Toast.makeText(getActivity(),checkedStr,Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER_VERTICAL,0,0);
@@ -69,8 +68,6 @@ public class ListDialog extends DialogFragment implements DialogInterface.OnClic
     @Override
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
         String message = which + " is checked";
-
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-
     }
 }
