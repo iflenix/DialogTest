@@ -28,6 +28,8 @@ public class MainActivity extends Activity implements ListDialog.NoticeDialogLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+       // getActionBar().show();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         dlg1 = new Dialog1();
         dlg2 = new Dialog2();
         tpDlg = new TimePickerDialog(this,timeSetListener,0,0,true);

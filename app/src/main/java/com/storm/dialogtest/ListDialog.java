@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -58,14 +59,16 @@ public class ListDialog extends DialogFragment implements DialogInterface.OnClic
                 checkedStr+= i+ ", ";
 
             }
-            Toast.makeText(getActivity(),checkedStr,Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(getActivity(),checkedStr,Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER_VERTICAL,0,0);
+            toast.show();
 
         }
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-        String message = which + " is cheked";
+        String message = which + " is checked";
 
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
 
