@@ -7,12 +7,15 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * Created by HOME on 04.07.2015.
  */
-public class ListDialog extends DialogFragment implements DialogInterface.OnClickListener {
+public class ListDialog extends DialogFragment implements DialogInterface.OnClickListener, DialogInterface.OnMultiChoiceClickListener {
+
 
     public interface NoticeDialogListener {
         void onDialogPositiveClick(int checkedItemPos);
@@ -27,7 +30,7 @@ public class ListDialog extends DialogFragment implements DialogInterface.OnClic
         try {
             mListener = (NoticeDialogListener) activity;
         } catch (ClassCastException e) {
-            Log.d("MyLogs","CLASS CAST EXCEPTION IN LIST DIALOG!");
+            Log.d("MyLogs", "CLASS CAST EXCEPTION IN LIST DIALOG!");
         }
     }
 
@@ -36,24 +39,35 @@ public class ListDialog extends DialogFragment implements DialogInterface.OnClic
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 
         adb.setTitle("ListDialog");
-       // adb.setItems(savedInstanceState.getStringArray("data"),this);
-        adb.setSingleChoiceItems(getArguments().getStringArray("data"), 0, this);
-        adb.setPositiveButton("OK",this);
+        // adb.setItems(savedInstanceState.getStringArray("data"),this);
+//        adb.setSingleChoiceItems(getArguments().getStringArray("data"), 0, this);
+        adb.setMultiChoiceItems(getArguments().getStringArray("data"), null, this);
+        adb.setPositiveButton("OK", this);
         return adb.create();
 
     }
-
-
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == Dialog.BUTTON_POSITIVE) {
 
-        ListView lv = ((AlertDialog) dialog).getListView();
-        int pos = lv.getCheckedItemPosition();
-        mListener.onDialogPositiveClick(pos);
-        }
+            ListView lv = ((AlertDialog) dialog).getListView();
+            SparseBooleanArray checkedArray = lv.getCheckedItemPositions();
+            String checkedStr = "Checked: ";
+            for (int i = 0; i < checkedArray.size();i++) {
+                checkedStr+= i+ ", ";
 
+            }
+            Toast.makeText(getActivity(),checkedStr,Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+        String message = which + " is cheked";
+
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
 
     }
 }
