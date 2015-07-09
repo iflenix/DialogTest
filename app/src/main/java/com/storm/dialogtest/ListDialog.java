@@ -19,7 +19,7 @@ public class ListDialog extends DialogFragment implements DialogInterface.OnClic
 
 
     public interface NoticeDialogListener {
-        void onDialogPositiveClick(int checkedItemPos);
+        void onDialogPositiveClick(int[] checkedItemPos);
     }
 
     NoticeDialogListener mListener;
@@ -51,16 +51,24 @@ public class ListDialog extends DialogFragment implements DialogInterface.OnClic
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == Dialog.BUTTON_POSITIVE) {
+            int[] checked;
 
             ListView lv = ((AlertDialog) dialog).getListView();
             SparseBooleanArray checkedArray = lv.getCheckedItemPositions();
+            checked = new int[checkedArray.size()];
             String checkedStr = "Checked: ";
+            int j = 0;
             for (int i = 0; i < checkedArray.size();i++) {
-                checkedStr+= i+ ", ";
+                if(checkedArray.valueAt(i)) {
+                    checkedStr += i + ", ";
+                    checked[j++] = checkedArray.keyAt(i);
+
+                }
             }
-            Toast toast = Toast.makeText(getActivity(),checkedStr,Toast.LENGTH_SHORT);
+           /* Toast toast = Toast.makeText(getActivity(),checkedStr,Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER_VERTICAL,0,0);
-            toast.show();
+            toast.show();*/
+            mListener.onDialogPositiveClick(checked);
 
         }
     }

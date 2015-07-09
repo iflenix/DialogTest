@@ -6,10 +6,17 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -19,6 +26,7 @@ public class MainActivity extends Activity implements ListDialog.NoticeDialogLis
     DialogFragment dlg2;
     DialogFragment listDlg;
     TimePickerDialog tpDlg;
+    TextView animTextView;
 
     String[] data = {"one", "two", "three", "four"};
     NotificationManager notifManager;
@@ -34,8 +42,20 @@ public class MainActivity extends Activity implements ListDialog.NoticeDialogLis
         tpDlg = new TimePickerDialog(this, timeSetListener, 0, 0, true);
         listDlg = new ListDialog();
         notifManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        animTextView = (TextView) findViewById(R.id.textViewAnim);
+        registerForContextMenu(animTextView);
+
+        Button btn = (Button) findViewById(R.id.btnListDlg);
+        btn.setBackgroundResource(R.drawable.step_anim);
+        AnimationDrawable animationDrawable = (AnimationDrawable) btn.getBackground();
+        animationDrawable.start();
+
+        Button timePicker = (Button) findViewById(R.id.btnTimeDlg);
+        timePicker.setBackgroundResource(R.drawable.state_list_test);
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -65,7 +85,6 @@ public class MainActivity extends Activity implements ListDialog.NoticeDialogLis
                         .setWhen(System.currentTimeMillis())
                         .setSmallIcon(android.R.drawable.ic_dialog_info);
 
-
                 Notification nf = builder.build();
                 notifManager.notify(1, nf);
                 Thread t = new Thread(new Runnable() {
@@ -82,7 +101,6 @@ public class MainActivity extends Activity implements ListDialog.NoticeDialogLis
                 builder.setProgress(100,75,false);
                 notifManager.notify(1,builder.build());
 
-
         }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -90,6 +108,53 @@ public class MainActivity extends Activity implements ListDialog.NoticeDialogLis
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    final int MENU_ALPHA_ID = 1;
+    final int MENU_SCALE_ID = 2;
+    final int MENU_TRANSLATE_ID = 3;
+    final int MENU_SHAKE_ID = 4;
+    final int MENU_COMBO_ID = 5;
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        switch (v.getId()) {
+            case R.id.textViewAnim:
+                menu.add(0,MENU_ALPHA_ID,0,"Alpha TEST");
+                menu.add(0,MENU_SCALE_ID,0,"Scale TEST");
+                menu.add(0,MENU_TRANSLATE_ID,0,"Translate TEST");
+                menu.add(0, MENU_SHAKE_ID, 0, "SHAKE TEST");
+
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Animation anim = null;
+        switch (item.getItemId()) {
+            case MENU_ALPHA_ID:
+                anim = AnimationUtils.loadAnimation(this,R.anim.alpha_test);
+                anim.setRepeatMode(Animation.RESTART);
+                anim.setRepeatCount(Animation.INFINITE);
+                break;
+            case MENU_SCALE_ID:
+                anim = AnimationUtils.loadAnimation(this,R.anim.scale_test);
+                break;
+
+            case MENU_TRANSLATE_ID:
+                anim = AnimationUtils.loadAnimation(this,R.anim.trans_test);
+                break;
+            case MENU_SHAKE_ID:
+                anim = AnimationUtils.loadAnimation(this,R.anim.shake);
+                //anim.setInterpolator(new AccelerateDecelerateInterpolator());
+                break;
+
+            default: return true;
+        }
+
+        animTextView.startAnimation(anim);
+        return true;
     }
 
     public void onClick(View v) {
@@ -122,7 +187,12 @@ public class MainActivity extends Activity implements ListDialog.NoticeDialogLis
     };
 
     @Override
-    public void onDialogPositiveClick(int checkedItemPos) {
-        Toast.makeText(this, "Checked:" + String.valueOf(checkedItemPos), Toast.LENGTH_SHORT).show();
+    public void onDialogPositiveClick(int[] checkedItemPos) {
+        String checkedString = "Checked:";
+        for (int i: checkedItemPos) {
+            checkedString += i + ",";
+
+        }
+        Toast.makeText(this, checkedString, Toast.LENGTH_SHORT).show();
     }
 }

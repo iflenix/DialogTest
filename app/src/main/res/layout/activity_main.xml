@@ -34,4 +34,20 @@
         android:onClick="onClick"
         android:text="ListDlg"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Animation test"
+        android:id="@+id/textViewAnim"
+        android:layout_gravity="center_horizontal" />
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.storm.dialogtest.GraphicsView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>
+
 </LinearLayout>
